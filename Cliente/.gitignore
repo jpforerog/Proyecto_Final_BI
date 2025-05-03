@@ -1,0 +1,14 @@
+
+.venv/
+
+
+mi_app.py
+
+
+
+
+__pycache__/
+*.pyc
+
+
+.vscode/

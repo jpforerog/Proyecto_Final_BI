@@ -1,0 +1,15 @@
+# Ignorar entorno virtual
+.venv/
+
+# Ignorar base de datos SQLite
+partidos.db
+
+# Ignorar carpeta de archivos innecesarios
+procesado_final_no_importante/
+
+# Ignorar archivos compilados de Python
+__pycache__/
+*.pyc
+
+# Ignorar archivos de configuración del editor
+.vscode/
