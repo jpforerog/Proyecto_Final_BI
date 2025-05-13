@@ -2,7 +2,7 @@ import pandas as pd
 import sqlite3
 
 # Configuración
-CSV_FILE = "df_procesado_final.csv"  # Ruta de tu archivo CSV
+CSV_FILE = "crear_database\df_procesado_final_clusters.csv"  # Ruta de tu archivo CSV
 DB_NAME = "partidos.db"  # Nombre de la base de datos SQLite
 TABLE_NAME = "PARTIDOS"  # Nombre de la tabla a crear
 

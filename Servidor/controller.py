@@ -1,14 +1,15 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from models.models import RendimientoPartido, JugadorRendimiento
+from models.models import RendimientoPartido, JugadorRendimiento,JugadorCluster,JugadoresRequest
 from database.database import  get_db
 from sqlalchemy.sql import text
 from routers.jugadores import router as jugadores_router
-
+from routers.clusters import router as grupos_router
 
 app = FastAPI()
 
 app.include_router(jugadores_router)
+app.include_router(grupos_router)
 
 
 
@@ -75,6 +76,54 @@ def rendimiento_partido(jugador_id: str , db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=500,
             detail=f"Error al obtener datos: {str(e)}"
+        )
+    
+
+@app.post("/partidos/grupo/", response_model=list[JugadorCluster])
+def obtener_rendimiento_grupo(jugadores: JugadoresRequest, db: Session = Depends(get_db)):
+    try:
+        resultados = []
+        
+        for jugador_id in jugadores.jugadores_ids:
+            # Consulta modificada para incluir posiciones
+            query = text("""
+                SELECT Fecha, Rendimiento, Posc
+                FROM PARTIDOS 
+                WHERE Fecha IS NOT NULL 
+                    AND Rendimiento IS NOT NULL
+                    AND Posc IS NOT NULL
+                    AND jugador_id = :jugador_id
+            """)
+            
+            result = db.execute(query, {"jugador_id": jugador_id})
+            registros = result.fetchall()
+            
+            if not registros:
+                continue  # O manejar error según necesidad
+                
+            # Procesar datos
+            partidos = []
+            posiciones = set()
+            
+            for row in registros:
+                partidos.append({
+                    "fecha": row.Fecha,
+                    "rendimiento": row.Rendimiento
+                })
+                posiciones.add(row.Posc)
+            
+            resultados.append({
+                "jugador_id": jugador_id,
+                "partidos": partidos,
+                "posiciones": list(posiciones)
+            })
+            
+        return resultados
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error al procesar la solicitud: {str(e)}"
         )
     
 

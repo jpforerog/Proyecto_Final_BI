@@ -21,7 +21,7 @@ with col2:
         st.switch_page("pages/performance.py")
         st.rerun()
         
-    if st.button("📈 Módulo de Estadísticas (Próximamente)", 
+    if st.button("📈 Módulo de Grupos de jugadores", 
                 help="Ver estadísticas avanzadas y comparativas"):
         st.switch_page("pages/stats.py")
         st.rerun()
